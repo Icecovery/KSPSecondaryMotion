@@ -54,8 +54,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleKSPSMTest.cs" />
     <Compile Include="ModuleSpringPhysics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "$(SolutionDir)GameData\KSPSecondaryMotion\Plugins\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

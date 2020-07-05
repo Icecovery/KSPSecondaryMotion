@@ -17,6 +17,21 @@ namespace KSPSecondaryMotion
 
         [KSPField(isPersistant = false)]
         public bool applyGravity = false;                   //apply gravity to the tip?
+
+
+        //testing
+
+        //[KSPField(isPersistant = false)]
+        //public bool reconstructAndModifyHierarchy = false;
+
+        //[KSPField(isPersistant = false)]
+        //public string addTargetUnder = "";
+
+        //[KSPField(isPersistant = false)]
+        //public string whichIsChildOf = "";
+
+        //[KSPField(isPersistant = false)]
+
         #endregion
 
         #region UI tweakable
@@ -24,10 +39,13 @@ namespace KSPSecondaryMotion
                     guiActive = true,
                     guiActiveEditor = true,
                     guiName = "Spring Physics Damper Ratio",
-                    advancedTweakable = true),
+                    advancedTweakable = true,
+                    groupName = "KSPSecondaryMotion",
+                    groupDisplayName = "Secondary Motion Settings",
+                    groupStartCollapsed = true),
         UI_FloatRange(
                     minValue = 0.0f, 
-                    maxValue = 5.0f, 
+                    maxValue = 10.0f, 
                     stepIncrement = 0.1f, 
                     scene = UI_Scene.All)]
         public float damperRatio = 0.5f;                   //drag multiplier
@@ -36,10 +54,13 @@ namespace KSPSecondaryMotion
                     guiActive = true,
                     guiActiveEditor = true,
                     guiName = "Spring Physics Spring Ratio",
-                    advancedTweakable = true),
+                    advancedTweakable = true,
+                    groupName = "KSPSecondaryMotion",
+                    groupDisplayName = "Secondary Motion Settings",
+                    groupStartCollapsed = true),
         UI_FloatRange(
                     minValue = 10f,
-                    maxValue = 200f,
+                    maxValue = 500f,
                     stepIncrement = 5.0f,
                     scene = UI_Scene.All)]
         public float springRatio = 80.0f;                   //spring force
@@ -52,6 +73,9 @@ namespace KSPSecondaryMotion
         private Rigidbody springRB;                         //rigidbody of the virtual obj
         private Vector3 LocalDistance;                      //distance between ideal position and virtual obj
         private Vector3 LocalVelocity;                      //velocity converted to local space
+
+        private bool hasDeployablePart;
+        private ModuleDeployablePart deployablePart;
 
         public override void OnStart(StartState state)
         {
@@ -120,12 +144,62 @@ namespace KSPSecondaryMotion
             springRB.constraints = (RigidbodyConstraints)((int)RigidbodyConstraints.FreezeRotationX
                                                           + (int)RigidbodyConstraints.FreezeRotationY
                                                           + (int)RigidbodyConstraints.FreezeRotationZ);
+
+            ModuleDeployablePart solar = part.FindModelComponent<ModuleDeployableSolarPanel>();
+            if (solar != null)
+            {
+                deployablePart = solar;
+                hasDeployablePart = true;
+                Debug.Log($"[KSP Secondary Motion - Spring Physics] Found ModuleDeployableSolarPanel");
+            }
+            else
+            {
+                ModuleDeployablePart antenna = part.FindModelComponent<ModuleDeployableAntenna>();
+                if (antenna != null)
+                {
+                    deployablePart = antenna;
+                    hasDeployablePart = true;
+                    Debug.Log($"[KSP Secondary Motion - Spring Physics] Found ModuleDeployableAntenna");
+                }
+                else
+                {
+                    ModuleDeployablePart radiator = part.FindModelComponent<ModuleDeployableRadiator>();
+                    if (radiator != null)
+                    {
+                        deployablePart = radiator;
+                        hasDeployablePart = true;
+                        Debug.Log($"[KSP Secondary Motion - Spring Physics] Found ModuleDeployableRadiator");
+                    }
+                    else
+                    {
+                        deployablePart = null;
+                        hasDeployablePart = false;
+                        Debug.Log($"[KSP Secondary Motion - Spring Physics] No ModuleDeployablePart found");
+                    }
+                }
+            }
+            
             return true;
         }
 
         public override void OnFixedUpdate()
         {
             base.OnFixedUpdate();
+
+            if (hasDeployablePart)
+            {
+                if (deployablePart.deployState != ModuleDeployablePart.DeployState.EXTENDED)
+                {
+                    if (LocalDistance.sqrMagnitude > 10000)
+                    {
+                        springObj.transform.position = target.transform.position;
+                        springRB.velocity = Vector3.zero;
+                        LocalDistance = Vector3d.zero;
+                        root.LookAt(springObj.position, -transform.forward);
+                    }
+                    return;
+                }
+            }
 
             //modified from https://forum.unity.com/threads/car-antenna-physics.464619/#post-3293313
 

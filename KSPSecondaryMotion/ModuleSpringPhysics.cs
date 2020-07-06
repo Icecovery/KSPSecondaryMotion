@@ -64,6 +64,22 @@ namespace KSPSecondaryMotion
                     stepIncrement = 5.0f,
                     scene = UI_Scene.All)]
         public float springRatio = 80.0f;                   //spring force
+
+        [KSPField(isPersistant = true,
+                    guiActive = true,
+                    guiActiveEditor = true,
+                    guiName = "Failsafe Activate Range",
+                    advancedTweakable = true,
+                    groupName = "KSPSecondaryMotion",
+                    groupDisplayName = "Secondary Motion Settings",
+                    groupStartCollapsed = true),
+        UI_FloatRange(
+                    minValue = 0.1f,
+                    maxValue = 10f,
+                    stepIncrement = 1.0f,
+                    scene = UI_Scene.All)]
+        public float failsafeRange = 5.0f;                  //Failsafe Activate Range
+
         #endregion
 
         private Transform target;                           //tip ideal position
@@ -194,7 +210,6 @@ namespace KSPSecondaryMotion
                     {
                         springObj.transform.position = target.transform.position;
                         springRB.velocity = Vector3.zero;
-                        LocalDistance = Vector3d.zero;
                         root.LookAt(springObj.position, -transform.forward);
                     }
                     return;
@@ -210,10 +225,10 @@ namespace KSPSecondaryMotion
             LocalDistance = target.InverseTransformDirection(target.position - springObj.position);
 
             // in case something went wrong
-            if (LocalDistance.sqrMagnitude > 10000) 
+            if (LocalDistance.sqrMagnitude > failsafeRange * failsafeRange) 
             {
-                Debug.Log($"[KSP Secondary Motion - Spring Physics] LocalDistance.sqrMagnitude = " +
-                    $"{LocalDistance.sqrMagnitude}, resetting spring");
+                //Debug.Log($"[KSP Secondary Motion - Spring Physics] LocalDistance.sqrMagnitude = " +
+                //    $"{LocalDistance.sqrMagnitude}, resetting spring");
                 springObj.transform.position = target.transform.position;
                 springRB.velocity = Vector3.zero;
                 LocalDistance = Vector3d.zero;
@@ -240,6 +255,7 @@ namespace KSPSecondaryMotion
             output.AppendLine($"<b>This part contain Spring Physics Module</b>");
             output.AppendLine($"Default Damper Ratio: {damperRatio}");
             output.AppendLine($"Default Spring Ratio: {springRatio}");
+            output.AppendLine($"Default Failsafe Activate Range: {failsafeRange}");
             output.AppendLine($"<i>Above settings can be changed inside VAB/SPH or on flight (Advanced" +
                 $" Tweakables enable required)</i>");
             output.AppendLine($"Tip Mass: {tipMass}");

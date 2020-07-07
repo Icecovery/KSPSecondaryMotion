@@ -17,21 +17,6 @@ namespace KSPSecondaryMotion
 
         [KSPField(isPersistant = false)]
         public bool applyGravity = false;                   //apply gravity to the tip?
-
-
-        //testing
-
-        //[KSPField(isPersistant = false)]
-        //public bool reconstructAndModifyHierarchy = false;
-
-        //[KSPField(isPersistant = false)]
-        //public string addTargetUnder = "";
-
-        //[KSPField(isPersistant = false)]
-        //public string whichIsChildOf = "";
-
-        //[KSPField(isPersistant = false)]
-
         #endregion
 
         #region UI tweakable
@@ -90,8 +75,10 @@ namespace KSPSecondaryMotion
         private Vector3 LocalDistance;                      //distance between ideal position and virtual obj
         private Vector3 LocalVelocity;                      //velocity converted to local space
 
-        private bool hasDeployablePart;
         private ModuleDeployablePart deployablePart;
+        //private ModuleAnimateGeneric animateGeneric;
+
+        private bool isDisabled;
 
         public override void OnStart(StartState state)
         {
@@ -161,60 +148,75 @@ namespace KSPSecondaryMotion
                                                           + (int)RigidbodyConstraints.FreezeRotationY
                                                           + (int)RigidbodyConstraints.FreezeRotationZ);
 
-            ModuleDeployablePart solar = part.FindModelComponent<ModuleDeployableSolarPanel>();
-            if (solar != null)
+            foreach (PartModule m in part.Modules)
             {
-                deployablePart = solar;
-                hasDeployablePart = true;
-                Debug.Log($"[KSP Secondary Motion - Spring Physics] Found ModuleDeployableSolarPanel");
-            }
-            else
-            {
-                ModuleDeployablePart antenna = part.FindModelComponent<ModuleDeployableAntenna>();
-                if (antenna != null)
+                switch (m.moduleName)
                 {
-                    deployablePart = antenna;
-                    hasDeployablePart = true;
-                    Debug.Log($"[KSP Secondary Motion - Spring Physics] Found ModuleDeployableAntenna");
-                }
-                else
-                {
-                    ModuleDeployablePart radiator = part.FindModelComponent<ModuleDeployableRadiator>();
-                    if (radiator != null)
-                    {
-                        deployablePart = radiator;
-                        hasDeployablePart = true;
-                        Debug.Log($"[KSP Secondary Motion - Spring Physics] Found ModuleDeployableRadiator");
-                    }
-                    else
-                    {
-                        deployablePart = null;
-                        hasDeployablePart = false;
-                        Debug.Log($"[KSP Secondary Motion - Spring Physics] No ModuleDeployablePart found");
-                    }
+                    case "ModuleDeployableSolarPanel":
+                    case "ModuleDeployableAntenna":
+                    case "ModuleDeployableRadiator":
+                    case "ModuleDeployablePart":
+                        Debug.Log($"[KSP Secondary Motion - Spring Physics] Found {m.moduleName}");
+                        deployablePart = (ModuleDeployablePart)m;
+                        goto END_OF_FOREACH;
+                    //case "ModuleAnimateGeneric":
+                    //    Debug.Log($"[KSP Secondary Motion - Spring Physics] Found {m.moduleName}");
+                    //    animateGeneric = (ModuleAnimateGeneric)m;
+                    //    goto END_OF_FOREACH;
+                    default:
+                        break;
                 }
             }
+            END_OF_FOREACH: //How to break loop from switch //plz don't kill me
             
             return true;
+        }
+
+        private void Disable()
+        {
+            springObj.transform.position = target.transform.position;
+            springRB.velocity = Vector3.zero;
+            root.LookAt(springObj.position, -transform.forward);
+
+            isDisabled = true;
         }
 
         public override void OnFixedUpdate()
         {
             base.OnFixedUpdate();
 
-            if (hasDeployablePart)
+            if (deployablePart != null)
             {
-                if (deployablePart.deployState != ModuleDeployablePart.DeployState.EXTENDED)
+                if (deployablePart.deployState == ModuleDeployablePart.DeployState.EXTENDED)
                 {
-                    if (LocalDistance.sqrMagnitude > 10000)
-                    {
-                        springObj.transform.position = target.transform.position;
-                        springRB.velocity = Vector3.zero;
-                        root.LookAt(springObj.position, -transform.forward);
-                    }
+                    isDisabled = false;
+                }
+                else if (isDisabled)
+                {
+                    return;
+                }
+                else // not extended but still enable
+                {
+                    Disable();
                     return;
                 }
             }
+            //else if (animateGeneric != null)
+            //{
+            //    if (animateGeneric.deployPercent >= 100f) //extended
+            //    {
+            //        isDisabled = false;
+            //    }
+            //    else if (isDisabled)
+            //    {
+            //        return;
+            //    }
+            //    else // not extended but still enable
+            //    {
+            //        Disable();
+            //        return;
+            //    }
+            //}
 
             //modified from https://forum.unity.com/threads/car-antenna-physics.464619/#post-3293313
 

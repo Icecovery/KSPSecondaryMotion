@@ -57,7 +57,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InterpolationSegmentData.cs" />
     <Compile Include="ModuleHierarchyReconstructor.cs" />
+    <Compile Include="ModuleQuadraticBezierInterpolation.cs" />
     <Compile Include="ModuleSpringPhysics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

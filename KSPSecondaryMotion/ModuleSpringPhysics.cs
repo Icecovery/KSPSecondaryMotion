@@ -59,8 +59,8 @@ namespace KSPSecondaryMotion
                     groupDisplayName = "Secondary Motion Settings",
                     groupStartCollapsed = true),
         UI_FloatRange(
-                    minValue = 0.1f,
-                    maxValue = 10f,
+                    minValue = 1f,
+                    maxValue = 50f,
                     stepIncrement = 1.0f,
                     scene = UI_Scene.All)]
         public float failsafeRange = 5.0f;                  //Failsafe Activate Range
@@ -78,7 +78,7 @@ namespace KSPSecondaryMotion
         private ModuleDeployablePart deployablePart;
         //private ModuleAnimateGeneric animateGeneric;
 
-        private bool isDisabled;
+        private bool isDisabled = false;
 
         public override void OnStart(StartState state)
         {

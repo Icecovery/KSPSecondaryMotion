@@ -116,7 +116,11 @@ namespace KSPSecondaryMotion
 
             float distance = Vector3.Distance(pivot.position, tip.position);
             Vector3 direction = (tip.position - pivot.position).normalized;
-            control = new GameObject("Bezier Control").transform;
+            control = transform.Find("Bezier Control");
+            if (control == null)
+            {
+                control = new GameObject("Bezier Control").transform;
+            }
             control.parent = transform;
             control.position = pivot.position + direction * distance / 2f;
             control.rotation = pivot.rotation;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using UnityEngine;
 
 namespace KSPSecondaryMotion
@@ -11,7 +12,8 @@ namespace KSPSecondaryMotion
         public string pivotName = "pivot";
         [KSPField(isPersistant = false)]
         public string tipName = "tip";
-
+        [KSPField(isPersistant = false)]
+        public string lookAtUp = "Zneg";
 
         private Transform pivot;
         private Transform tip;
@@ -19,6 +21,8 @@ namespace KSPSecondaryMotion
         private Transform[] segments;
         private ModuleDeployablePart deployablePart;
         private bool isDisabled = false;
+        private enum Direction { Xpos, Xneg, Ypos, Yneg, Zpos, Zneg }
+        private Direction up;
 
         public override void OnLoad(ConfigNode node)
         {
@@ -115,15 +119,15 @@ namespace KSPSecondaryMotion
             }
 
             float distance = Vector3.Distance(pivot.position, tip.position);
-            Vector3 direction = (tip.position - pivot.position).normalized;
+            //Vector3 direction = (tip.position - pivot.position).normalized;
             control = transform.Find("Bezier Control");
             if (control == null)
             {
                 control = new GameObject("Bezier Control").transform;
             }
             control.parent = transform;
-            control.position = pivot.position + direction * distance / 2f;
-            control.rotation = pivot.rotation;
+            control.position = transform.position + pivot.parent.up * distance / 2f;
+            control.localRotation = Quaternion.identity;
 
             foreach (PartModule m in part.Modules)
             {
@@ -139,6 +143,29 @@ namespace KSPSecondaryMotion
                     default:
                         break;
                 }
+            }
+
+            string input = lookAtUp.ToLower().Trim();
+            switch (input)
+            {
+                case "xpos":
+                    up = Direction.Xpos;
+                    break;
+                case "xneg":
+                    up = Direction.Xneg;
+                    break;
+                case "ypos":
+                    up = Direction.Ypos;
+                    break;
+                case "yneg":
+                    up = Direction.Yneg;
+                    break;
+                case "zpos":
+                    up = Direction.Zpos;
+                    break;
+                case "zneg":
+                    up = Direction.Zneg;
+                    break;
             }
         }
 
@@ -169,7 +196,7 @@ namespace KSPSecondaryMotion
                 segments[i].position = QuadraticBezier(pivot.position, control.position, tip.position,
                                                        i / (float)(segments.Length));
                 segments[i].LookAt(segments[i].position + QuadraticBezierTangent(pivot.position, control.position, tip.position,
-                                                       i / (float)(segments.Length)), -transform.forward);
+                                                       i / (float)(segments.Length)), GetDirection(up));
             }
         }
 
@@ -181,6 +208,26 @@ namespace KSPSecondaryMotion
         private Vector3 QuadraticBezierTangent(Vector3 A, Vector3 B, Vector3 C, float t)
         {
             return 2f * (-A + B + (A - 2 * B + C) * t);
+        }
+
+        private Vector3 GetDirection(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Xpos:
+                    return transform.right;
+                case Direction.Xneg:
+                    return -transform.right;
+                case Direction.Ypos:
+                    return transform.up;
+                case Direction.Yneg:
+                    return -transform.up;
+                case Direction.Zpos:
+                    return transform.forward;
+                case Direction.Zneg:
+                    return -transform.forward;
+            }
+            return Vector3.zero;
         }
     }
 }

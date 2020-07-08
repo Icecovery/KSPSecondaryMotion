@@ -19,6 +19,7 @@ public class CurveInterpolationEditor : Editor
             sb.AppendLine("\tname = ModuleQuadraticBezierInterpolation");
             sb.AppendLine("\tpivotName = " + c.pivot.name);
             sb.AppendLine("\ttipName = " + c.tip.name);
+            sb.AppendLine("\tlookAtUp = " + c.lookAtUp.ToString());
             for (int i = 0; i < c.nodes.Length; i++)
             {
                 sb.AppendLine("\tSEGMENT");

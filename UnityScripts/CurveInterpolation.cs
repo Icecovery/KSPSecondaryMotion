@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class CurveInterpolation : MonoBehaviour 
 {
+    public enum Direction { Xpos, Xneg, Ypos, Yneg, Zpos, Zneg}
+
     public Transform pivot;
     public Transform tip;
     public Transform[] nodes;
+    public Direction lookAtUp;
 
     private int segmentCount;
     private Transform control;
@@ -28,8 +32,28 @@ public class CurveInterpolation : MonoBehaviour
             nodes[i].position = QuadraticBézier(pivot.position, control.position, tip.position,
                                                 i / (float)(segmentCount));
             nodes[i].LookAt(nodes[i].position + QuadraticBézierTangent(pivot.position, control.position, tip.position,
-                                                i / (float)(segmentCount)), -transform.forward);
+                                                i / (float)(segmentCount)), GetDirection(lookAtUp));
         }
+    }
+
+    private Vector3 GetDirection(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Xpos:
+                return transform.right;
+            case Direction.Xneg:
+                return -transform.right;
+            case Direction.Ypos:
+                return transform.up;
+            case Direction.Yneg:
+                return -transform.up;
+            case Direction.Zpos:
+                return transform.forward;
+            case Direction.Zneg:
+                return -transform.forward;
+        }
+        return Vector3.zero;
     }
 
     private Vector3 QuadraticBézier(Vector3 A, Vector3 B, Vector3 C, float t)

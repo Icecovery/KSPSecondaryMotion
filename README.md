@@ -21,14 +21,14 @@ This mod is currently working in progress.
 
 ### Todo list
  - [ ] Balancing new parts for career mode
- - [ ] Add more parts
+ - [x] Add more parts
     - [x] APX-50 SeriesC
     - [x] UHF727VM Multi-Band LTE Antenna
     - [x] VHF3088T Tunable Low Profile VHF Antenna
     - [x] VHF100512SLP VHF/UHF Low Profile Broadband Antenna
     - [x] CREW Duke and accessories
     - [x] The Plunger Antenna
-    - [ ] More...?
+    - [x] Wacky Waving Inflatable Arm Flailing Tubemen!
  - [ ] Add spring physics for more stock parts
     - [x] Gigantor XL Solar Array
     - [ ] SP-L 1x6 Photovoltaic Panels
@@ -41,5 +41,6 @@ This mod is currently working in progress.
     - [x] Communotron 16
     - [ ] Communotron Communotron 88-88
     - [ ] HG-5 High Gain Antenna
+    - [ ] Restock support
  - [ ] Documentation
  - [ ] Modify Shields.io badges after release on Spacedock

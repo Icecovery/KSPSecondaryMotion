@@ -29,18 +29,19 @@ This mod is currently working in progress.
     - [x] CREW Duke and accessories
     - [x] The Plunger Antenna
     - [x] Wacky Waving Inflatable Arm Flailing Tubemen!
- - [ ] Add spring physics for more stock parts
-    - [x] Gigantor XL Solar Array
-    - [ ] SP-L 1x6 Photovoltaic Panels
-    - [ ] OX-4L 1x6 Photovoltaic Panels
-    - [ ] SP-W 3x2 Photovoltaic Panels
-    - [ ] OX-4W 3x2 Photovoltaic Panels
-    - [ ] Thermal Control System (large)
-    - [ ] Thermal Control System (medium)
-    - [ ] Thermal Control System (small)
+	- [x] Pickle Rick!
+ - [x] Add spring physics for more stock parts
+    - [x] Gigantor XL Solar Array  
+    - [ ] ~~SP-L 1x6 Photovoltaic Panels~~ (Not Possible)  
+    - [ ] ~~OX-4L 1x6 Photovoltaic Panels~~  (Not Possible)  
+    - [ ] ~~SP-W 3x2 Photovoltaic Panels~~  (Not Possible)   
+    - [ ] ~~OX-4W 3x2 Photovoltaic Panels~~  (Not Possible)  
+    - [ ] ~~Thermal Control System (large)~~  (Not Possible)  
+    - [ ] ~~Thermal Control System (medium)~~  (Not Possible)    
+    - [ ] ~~Thermal Control System (small)~~  (Not Possible)
     - [x] Communotron 16
-    - [ ] Communotron Communotron 88-88
-    - [ ] HG-5 High Gain Antenna
-    - [ ] Restock support
+    - [ ] ~~Communotron Communotron 88-88~~ (Not Possible)
+    - [ ] ~~HG-5 High Gain Antenna~~ (Not Possible)
+ - [ ] Restock support
  - [ ] Documentation
  - [ ] Modify Shields.io badges after release on Spacedock

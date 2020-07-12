@@ -78,6 +78,9 @@ namespace KSPSecondaryMotion
         private ModuleDeployablePart deployablePart;
         //private ModuleAnimateGeneric animateGeneric;
 
+        private Vector3d lastOffset = Vector3.zero;
+
+
         private bool isDisabled = false;
 
         public override void OnStart(StartState state)
@@ -201,27 +204,20 @@ namespace KSPSecondaryMotion
                     return;
                 }
             }
-            //else if (animateGeneric != null)
-            //{
-            //    if (animateGeneric.deployPercent >= 100f) //extended
-            //    {
-            //        isDisabled = false;
-            //    }
-            //    else if (isDisabled)
-            //    {
-            //        return;
-            //    }
-            //    else // not extended but still enable
-            //    {
-            //        Disable();
-            //        return;
-            //    }
-            //}
 
             //modified from https://forum.unity.com/threads/car-antenna-physics.464619/#post-3293313
 
             //Sync the rotation 
-            springRB.transform.rotation = this.transform.rotation;
+            springRB.transform.rotation = transform.rotation;
+
+            //Sync position
+            //Thanks to flywlyx 
+            if (!FloatingOrigin.Offset.IsZero() || !Krakensbane.GetFrameVelocity().IsZero())
+            {
+                Vector3d offsetChangeRate = (FloatingOrigin.OffsetNonKrakensbane - lastOffset) / Time.fixedDeltaTime;
+                springRB.transform.position -= offsetChangeRate;
+                lastOffset = FloatingOrigin.OffsetNonKrakensbane;
+            }
 
             //Calculate the distance between the two points
             LocalDistance = target.InverseTransformDirection(target.position - springObj.position);
@@ -229,8 +225,6 @@ namespace KSPSecondaryMotion
             // in case something went wrong
             if (LocalDistance.sqrMagnitude > failsafeRange * failsafeRange) 
             {
-                //Debug.Log($"[KSP Secondary Motion - Spring Physics] LocalDistance.sqrMagnitude = " +
-                //    $"{LocalDistance.sqrMagnitude}, resetting spring");
                 springObj.transform.position = target.transform.position;
                 springRB.velocity = Vector3.zero;
                 LocalDistance = Vector3d.zero;
@@ -246,6 +240,9 @@ namespace KSPSecondaryMotion
             {
                 springRB.AddForce(FlightGlobals.getGeeForceAtPosition(transform.position), ForceMode.Acceleration);
             }
+
+            //Apply drag
+            springRB.AddForce((Vector3d)part.dragVectorDir * -0.5 * vessel.atmDensity * vessel.srfSpeed * part.maximum_drag, ForceMode.Force);
 
             //Aim the visible geo at the spring target
             root.LookAt(springObj.position, -transform.forward);

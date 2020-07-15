@@ -1,10 +1,10 @@
 # KSP Secondary Motion
 
 ![license](https://img.shields.io/github/license/Icecovery/KSPSecondaryMotion?style=for-the-badge)
-![spacedockDownloads](http://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=66adff&label=downloads&query=%24.downloads&suffix=+&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F0000)
-![spacedockFollowers](http://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=1ec92a&label=followers&query=%24.followers&suffix=+&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F0000)
-![modVersion](https://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=f2b02c&label=latest%20version&query=versions%5B%3A1%5D.friendly_version&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F0000)
-![kspVersion](https://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=c44221&label=Build%20for&prefix=KSP%20&query=versions%5B%3A1%5D.game_version&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F0000)
+![spacedockDownloads](http://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=66adff&label=downloads&query=%24.downloads&suffix=+&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F2477)
+![spacedockFollowers](http://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=1ec92a&label=followers&query=%24.followers&suffix=+&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F2477)
+![modVersion](https://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=f2b02c&label=latest%20version&query=versions%5B%3A1%5D.friendly_version&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F2477)
+![kspVersion](https://img.shields.io/badge/dynamic/json?style=for-the-badge&?color=c44221&label=Build%20for&prefix=KSP%20&query=versions%5B%3A1%5D.game_version&url=https%3A%2F%2Fspacedock.info%2Fapi%2Fmod%2F2477)
 
 KSP Secondary Motion is a Kerbal Space Program mod that adds secondary motion to the game, such as the spring physics of antennas or solar panels.
 
@@ -44,4 +44,4 @@ This mod is currently working in progress.
     - [ ] ~~HG-5 High Gain Antenna~~ (Not Possible)
  - [ ] Restock support
  - [ ] Documentation
- - [ ] Modify Shields.io badges after release on Spacedock
+ - [x] Modify Shields.io badges after release on Spacedock

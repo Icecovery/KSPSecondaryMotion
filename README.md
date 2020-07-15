@@ -13,11 +13,11 @@ This mod is currently working in progress.
 
 ### Forum Post
 
-[Forum Post](https://forum.kerbalspaceprogram.com/) (Not available)
+[Forum Post](https://forum.kerbalspaceprogram.com/index.php?/topic/195625-*)
 
 ### Download
 
-[Spacedock](https://spacedock.info/kerbal-space-program) (Not available)
+[Spacedock](https://spacedock.info/mod/2477)
 
 ### Todo list
  - [ ] Balancing new parts for career mode

@@ -6,6 +6,10 @@ A Kerbals Space Program MOD by Icecovery
 ========================================
 Changelog
 ----------------------------------------
+	v0.1.1 - 2020/09/25
+	* For KSP 1.8.x - 1.10.x
+	* Fixed improper theme name
+----------------------------------------
 	v0.1.0 - 2020/07/15
 	* For KSP 1.8.x - 1.10.x
 	* Initial release
